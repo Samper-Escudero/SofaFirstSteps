@@ -1,0 +1,31 @@
+#imports
+from stlib.scene import MainHeader, ContactHeader
+from stlib.visuals import ShowGrid
+from stlib.physics.rigid import Floor
+from stlib.physics.rigid import Cube
+
+# Sofa simulation files --> pyscn = standard python file with AT LEAST one fn named createScene
+# You can reload the scene by adding -i at the end of the command line: ./path/runSofa scenename.pyscn -i
+
+def createScene(rootNode):
+# createScene defines the root of the scene hierarchy --> entry point to fill the simulation's content
+# This function contains the scene's description. A scene is an ordered tree of nodes, representing objects
+# The main node is called rootNode which can contain additional components that describe its behaviour
+    MainHeader(rootNode, gravity=[0.0, -9.81, 0.0]) #defines main forces acting on the objects
+    ContactHeader(rootNode, alarmDistance=15,contactDistance=1)  #defines how to handle contacts between objects
+    #these two behaviours apply to all objects given that they are defined in the scene creation workflow
+
+    #instatiation of two prefab objects:
+
+    Floor(rootNode,
+           translation=[200.0, 0.0, 0.0],
+           uniformScale = 5.0,
+           isAStaticObject = True)
+
+    for i in range(10):
+        Cube(rootNode,
+            name = "Cube"+str(i),
+            translation=[i*50,42.0,0.0],
+            color=[1.0,0.0,0.0],
+            uniformScale=20.0)
+    return rootNode

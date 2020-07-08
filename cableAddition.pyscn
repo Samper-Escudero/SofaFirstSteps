@@ -1,0 +1,35 @@
+from stlib.scene import MainHeader, ContactHeader, Node
+from stlib.visuals import ShowGrid
+from stlib.physics.rigid import Floor, Cube
+from stlib.physics.deformable import ElasticMaterialObject
+from stlib.physics.constraints import FixedBox
+
+def Finger(parentNode=None, name="Finger",
+            rotation=[0.0,0.0,0.0],
+            translation=[0.0,0.0,0.0],
+            fixingBox=[0.0,0.0,0.0],
+            pullPointLocation=[0.0,0.0,0.0]):
+    finger = Node(parentNode, name)
+    eobject = ElasticMaterialObject(finger,
+                                    volumeMeshFileName="gripper/mesh/finger.vtk",
+                                    poissonRatio=0.3,
+                                    youngModulus =18000,
+                                    totalMass = 0.5,
+                                    surfaceColor=[0.0,0.8,0.7],
+                                    surfaceMeshFileName = "gripper/mesh/finger.stl",
+                                    rotation=rotation,
+                                    translation=translation)
+    return finger
+
+def createScene(rootNode):
+    ShowGrid(rootNode)
+    m=MainHeader(rootNode, plugins=["SoftRobots"])
+    m.getObject("VisualStyle").displayFlags='showForceFields showBehaviorModels showInteractionForceFields'
+    floor = Floor(rootNode,
+            translation=[0.0,0.0,0.0],
+            isAStaticObject=True)
+    cube = Cube (rootNode,
+            translation=[0.0,0.0,0.1])
+    finger = Finger(rootNode)
+
+    return rootNode
